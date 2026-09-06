@@ -11,139 +11,104 @@
 <style>
 *{
   box-sizing:border-box;
-  margin:0;
-  padding:0;
-  font-family:Arial,sans-serif;
 }
 
 body{
-  background:#0b1020;
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#0f1117;
   color:white;
-  min-height:100vh;
-  padding:20px;
 }
 
 .container{
-  max-width:700px;
+  max-width:600px;
   margin:auto;
+  padding:20px;
 }
 
 h1{
   text-align:center;
-  margin-bottom:8px;
-  font-size:28px;
-}
-
-.subtitle{
-  text-align:center;
-  color:#9ca3af;
   margin-bottom:25px;
 }
 
 .card{
-  background:#151b2e;
-  border-radius:18px;
+  background:#191d27;
+  border-radius:16px;
   padding:20px;
-  margin-bottom:18px;
-  box-shadow:0 8px 25px rgba(0,0,0,.25);
+  margin-bottom:15px;
+  box-shadow:0 5px 20px rgba(0,0,0,.3);
 }
 
-.status-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
+.status-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 0;
+  border-bottom:1px solid #303541;
+}
+
+.status-row:last-child{
+  border-bottom:none;
 }
 
 .status{
-  background:#0f1527;
-  padding:15px;
-  border-radius:12px;
-}
-
-.status-title{
-  color:#9ca3af;
-  font-size:13px;
-  margin-bottom:7px;
-}
-
-.status-value{
-  font-size:18px;
   font-weight:bold;
 }
 
 .online{
-  color:#22c55e;
+  color:#20e070;
 }
 
 .offline{
-  color:#ef4444;
+  color:#ff4d4d;
 }
 
-.warning{
-  color:#f59e0b;
-}
-
-.buttons{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:15px;
-  margin-top:15px;
+.unknown{
+  color:#ffc107;
 }
 
 button{
-  border:none;
-  border-radius:14px;
-  padding:20px;
-  font-size:22px;
+  width:100%;
+  border:0;
+  border-radius:12px;
+  padding:18px;
+  margin-top:12px;
+  font-size:20px;
   font-weight:bold;
   color:white;
   cursor:pointer;
 }
 
 .start{
-  background:#16a34a;
+  background:#168a43;
 }
 
 .stop{
-  background:#dc2626;
+  background:#c62828;
 }
 
 button:disabled{
-  opacity:.35;
-  cursor:not-allowed;
+  opacity:.45;
 }
 
-.last{
+.last-action{
   text-align:center;
-  margin-top:20px;
   font-size:18px;
+  padding:10px;
 }
 
 .error{
-  margin-top:15px;
-  padding:12px;
-  border-radius:10px;
-  background:#3b1111;
-  color:#ff8a8a;
-  display:none;
+  color:#ff6b6b;
+  font-size:14px;
   word-break:break-word;
+  margin-top:10px;
 }
 
-.info{
-  margin-top:15px;
-  color:#9ca3af;
-  font-size:13px;
+.small{
   text-align:center;
-}
-
-@media(max-width:500px){
-  .status-grid{
-    grid-template-columns:1fr;
-  }
-
-  .buttons{
-    grid-template-columns:1fr;
-  }
+  color:#8e96a8;
+  font-size:13px;
+  margin-top:15px;
 }
 </style>
 </head>
@@ -153,75 +118,71 @@ button:disabled{
 <div class="container">
 
 <h1>⚡ Uttam Starter Control</h1>
-<div class="subtitle">Remote START / STOP Panel</div>
 
 <div class="card">
 
-<div class="status-grid">
+  <div class="status-row">
+    <span>MQTT</span>
+    <span id="mqttStatus" class="status offline">OFFLINE</span>
+  </div>
 
-<div class="status">
-<div class="status-title">MQTT</div>
-<div id="mqttStatus" class="status-value offline">OFFLINE</div>
-</div>
+  <div class="status-row">
+    <span>ESP32</span>
+    <span id="espStatus" class="status offline">OFFLINE</span>
+  </div>
 
-<div class="status">
-<div class="status-title">ESP32</div>
-<div id="espStatus" class="status-value offline">OFFLINE</div>
-</div>
+  <div class="status-row">
+    <span>HOTSPOT</span>
+    <span id="hotspotStatus" class="status unknown">UNKNOWN</span>
+  </div>
 
-<div class="status">
-<div class="status-title">HOTSPOT</div>
-<div id="hotspotStatus" class="status-value offline">OFFLINE</div>
-</div>
+  <div class="status-row">
+    <span>INTERNET</span>
+    <span id="internetStatus" class="status unknown">UNKNOWN</span>
+  </div>
 
-<div class="status">
-<div class="status-title">INTERNET</div>
-<div id="internetStatus" class="status-value offline">OFFLINE</div>
-</div>
-
-<div class="status">
-<div class="status-title">Wi-Fi Users</div>
-<div id="usersStatus" class="status-value">0</div>
-</div>
-
-</div>
-
-<div id="errorBox" class="error"></div>
+  <div class="status-row">
+    <span>Wi-Fi Users</span>
+    <span id="usersStatus" class="status unknown">--</span>
+  </div>
 
 </div>
 
 
 <div class="card">
 
-<h2 style="text-align:center;">Starter Control</h2>
+  <button
+    id="startBtn"
+    class="start"
+    onclick="sendCommand('START')"
+    disabled>
+    ▶ START
+  </button>
 
-<div class="buttons">
-
-<button id="startBtn"
-class="start"
-onclick="sendCommand('START')"
-disabled>
-▶ START
-</button>
-
-<button id="stopBtn"
-class="stop"
-onclick="sendCommand('STOP')"
-disabled>
-■ STOP
-</button>
+  <button
+    id="stopBtn"
+    class="stop"
+    onclick="sendCommand('STOP')"
+    disabled>
+    ■ STOP
+  </button>
 
 </div>
 
-<div class="last">
-Last Action:
-<strong id="lastAction">NONE</strong>
+
+<div class="card">
+
+  <div class="last-action">
+    Last Action:
+    <strong id="lastAction">NONE</strong>
+  </div>
+
+  <div id="errorMessage" class="error"></div>
+
 </div>
 
-<div class="info">
-Buttons become active only when MQTT is connected.
-</div>
-
+<div class="small">
+  Uttam Automation • MQTT Remote Starter
 </div>
 
 </div>
@@ -229,9 +190,9 @@ Buttons become active only when MQTT is connected.
 
 <script>
 
-/* =========================
+/* ==============================
    HIVEMQ SETTINGS
-========================= */
+   ============================== */
 
 const MQTT_HOST =
 "wss://3eb57fe59a7e4f279b1dfa7c29dc413b.s1.eu.hivemq.cloud:8884/mqtt";
@@ -240,16 +201,17 @@ const MQTT_USER =
 "esp32";
 
 /*
-   YAHAN APNA HIVEMQ PASSWORD PASTE KARO.
-   Password chat me mat bhejna.
+   IMPORTANT:
+   Yahan apna HiveMQ password paste karo.
+   Password ko chat me mat bhejna.
 */
 const MQTT_PASS =
-"YOUR_HIVEMQ_PASSWORD";
+Uttam@861.";
 
 
-/* =========================
+/* ==============================
    MQTT TOPICS
-========================= */
+   ============================== */
 
 const COMMAND_TOPIC =
 "uttam/starter/command";
@@ -258,134 +220,97 @@ const STATUS_TOPIC =
 "uttam/starter/status";
 
 
+/* ==============================
+   VARIABLES
+   ============================== */
+
 let client = null;
 
 
-/* =========================
-   STATUS FUNCTION
-========================= */
+/* ==============================
+   UI FUNCTIONS
+   ============================== */
 
-function setStatus(id,text,online){
+function setStatus(id, text, type){
 
-  const el = document.getElementById(id);
+  const element = document.getElementById(id);
 
-  el.innerText = text;
+  element.textContent = text;
 
-  el.classList.remove(
-    "online",
-    "offline",
-    "warning"
-  );
-
-  if(online){
-    el.classList.add("online");
-  }else{
-    el.classList.add("offline");
-  }
+  element.className = "status " + type;
 }
 
 
-/* =========================
-   ERROR DISPLAY
-========================= */
+function setError(text){
 
-function showError(message){
+  document.getElementById("errorMessage").textContent = text;
 
-  const box =
-    document.getElementById("errorBox");
-
-  box.style.display = "block";
-
-  box.innerText =
-    "MQTT Error: " + message;
 }
 
 
 function clearError(){
 
-  const box =
-    document.getElementById("errorBox");
+  document.getElementById("errorMessage").textContent = "";
 
-  box.style.display = "none";
-
-  box.innerText = "";
 }
 
 
-/* =========================
-   CONNECT MQTT
-========================= */
+/* ==============================
+   MQTT CONNECT
+   ============================== */
 
 function connectMQTT(){
 
   clearError();
 
-  setStatus(
-    "mqttStatus",
-    "CONNECTING...",
-    false
-  );
-
-  console.log("Connecting MQTT...");
-
   const clientId =
-    "web_" +
-    Math.random()
-      .toString(16)
-      .substring(2,10);
+    "webpanel_" +
+    Math.random().toString(16).substring(2,10);
 
-  client = mqtt.connect(
-    MQTT_HOST,
-    {
-      username: MQTT_USER,
-      password: MQTT_PASS,
+  console.log("Connecting to HiveMQ...");
+  console.log("Client ID:", clientId);
 
-      clientId: clientId,
+  client = mqtt.connect(MQTT_HOST, {
 
-      clean: true,
+    username: MQTT_USER,
 
-      reconnectPeriod: 5000,
+    password: MQTT_PASS,
 
-      connectTimeout: 10000,
+    clientId: clientId,
 
-      protocolVersion: 4
-    }
-  );
+    clean: true,
+
+    reconnectPeriod: 5000,
+
+    connectTimeout: 15000,
+
+    protocolVersion: 4,
+
+    keepalive: 60
+
+  });
 
 
-  /* =====================
-     CONNECTED
-  ===================== */
+  /* CONNECTED */
 
   client.on("connect", function(){
 
     console.log("MQTT CONNECTED");
 
-    clearError();
-
     setStatus(
       "mqttStatus",
       "ONLINE",
-      true
+      "online"
     );
 
-    setStatus(
-      "espStatus",
-      "ONLINE",
-      true
-    );
+    clearError();
+
+    document.getElementById("startBtn").disabled = false;
+
+    document.getElementById("stopBtn").disabled = false;
 
 
-    document.getElementById(
-      "startBtn"
-    ).disabled = false;
-
-    document.getElementById(
-      "stopBtn"
-    ).disabled = false;
-
-
-    /* Subscribe status */
+    /* Subscribe to ESP32 status */
 
     client.subscribe(
       STATUS_TOPIC,
@@ -394,24 +319,20 @@ function connectMQTT(){
 
         if(err){
 
-          console.error(
-            "Subscribe error:",
-            err
-          );
+          console.error("Subscribe error:", err);
 
-          showError(
-            "Subscribe failed: " +
+          setError(
+            "Subscribe Error: " +
             err.message
           );
 
-        }else{
-
-          console.log(
-            "Subscribed:",
-            STATUS_TOPIC
-          );
-
+          return;
         }
+
+        console.log(
+          "Subscribed:",
+          STATUS_TOPIC
+        );
 
       }
     );
@@ -419,37 +340,90 @@ function connectMQTT(){
   });
 
 
-  /* =====================
-     MESSAGE RECEIVED
-  ===================== */
+  /* MESSAGE RECEIVED */
 
-  client.on(
-    "message",
-    function(topic,message){
+  client.on("message", function(topic, message){
 
-      const payload =
-        message.toString();
+    const msg =
+      message.toString().trim();
 
-      console.log(
-        "MQTT MESSAGE:",
-        topic,
-        payload
-      );
+    console.log(
+      "MQTT MESSAGE:",
+      topic,
+      msg
+    );
 
 
-      if(topic === STATUS_TOPIC){
+    if(topic !== STATUS_TOPIC){
 
-        processStatus(payload);
-
-      }
+      return;
 
     }
-  );
 
 
-  /* =====================
-     ERROR
-  ===================== */
+    /* ==========================
+       SIMPLE ESP32 STATUS
+       ========================== */
+
+    if(msg === "ONLINE"){
+
+      setStatus(
+        "espStatus",
+        "ONLINE",
+        "online"
+      );
+
+    }
+
+
+    /* ==========================
+       START
+       ========================== */
+
+    else if(msg === "START_PRESSED"){
+
+      setStatus(
+        "espStatus",
+        "ONLINE",
+        "online"
+      );
+
+      document.getElementById(
+        "lastAction"
+      ).textContent = "START PRESSED";
+
+    }
+
+
+    /* ==========================
+       STOP
+       ========================== */
+
+    else if(msg === "STOP_PRESSED"){
+
+      setStatus(
+        "espStatus",
+        "ONLINE",
+        "online"
+      );
+
+      document.getElementById(
+        "lastAction"
+      ).textContent = "STOP PRESSED";
+
+    }
+
+
+    /* ==========================
+       STRUCTURED STATUS
+       ========================== */
+
+    parseSystemStatus(msg);
+
+  });
+
+
+  /* ERROR */
 
   client.on("error", function(err){
 
@@ -458,73 +432,64 @@ function connectMQTT(){
       err
     );
 
-    showError(
-      err.message || String(err)
-    );
-
-  });
-
-
-  /* =====================
-     OFFLINE
-  ===================== */
-
-  client.on("offline", function(){
-
-    console.log(
-      "MQTT OFFLINE"
-    );
-
     setStatus(
       "mqttStatus",
       "OFFLINE",
-      false
+      "offline"
     );
 
-    document.getElementById(
-      "startBtn"
-    ).disabled = true;
-
-    document.getElementById(
-      "stopBtn"
-    ).disabled = true;
+    setError(
+      "MQTT Error: " +
+      (err.message || String(err))
+    );
 
   });
 
 
-  /* =====================
-     CLOSE
-  ===================== */
+  /* CLOSE */
 
   client.on("close", function(){
 
-    console.log(
-      "MQTT CONNECTION CLOSED"
-    );
+    console.log("MQTT connection closed");
 
     setStatus(
       "mqttStatus",
       "OFFLINE",
-      false
+      "offline"
+    );
+
+    document.getElementById("startBtn").disabled = true;
+
+    document.getElementById("stopBtn").disabled = true;
+
+  });
+
+
+  /* RECONNECT */
+
+  client.on("reconnect", function(){
+
+    console.log("MQTT reconnecting...");
+
+    setStatus(
+      "mqttStatus",
+      "CONNECTING",
+      "unknown"
     );
 
   });
 
 
-  /* =====================
-     RECONNECT
-  ===================== */
+  /* OFFLINE */
 
-  client.on("reconnect", function(){
+  client.on("offline", function(){
 
-    console.log(
-      "MQTT RECONNECTING..."
-    );
+    console.log("MQTT offline");
 
     setStatus(
       "mqttStatus",
-      "CONNECTING...",
-      false
+      "OFFLINE",
+      "offline"
     );
 
   });
@@ -532,20 +497,14 @@ function connectMQTT(){
 }
 
 
-/* =========================
-   PROCESS ESP32 STATUS
-========================= */
+/* ==============================
+   SYSTEM STATUS PARSER
+   ============================== */
 
-function processStatus(payload){
-
-  console.log(
-    "STATUS:",
-    payload
-  );
-
+function parseSystemStatus(msg){
 
   /*
-    Example:
+    Example expected message:
 
     ESP32=ONLINE,
     HOTSPOT=ONLINE,
@@ -554,145 +513,111 @@ function processStatus(payload){
     MQTT=ONLINE
   */
 
-
-  if(
-    payload.includes("ESP32=ONLINE")
-  ){
+  if(msg.indexOf("ESP32=ONLINE") !== -1){
 
     setStatus(
       "espStatus",
       "ONLINE",
-      true
+      "online"
     );
 
   }
 
 
-  if(
-    payload.includes("HOTSPOT=ONLINE")
-  ){
+  if(msg.indexOf("ESP32=OFFLINE") !== -1){
+
+    setStatus(
+      "espStatus",
+      "OFFLINE",
+      "offline"
+    );
+
+  }
+
+
+  if(msg.indexOf("HOTSPOT=ONLINE") !== -1){
 
     setStatus(
       "hotspotStatus",
       "ONLINE",
-      true
+      "online"
     );
 
   }
 
-  else if(
-    payload.includes("HOTSPOT=OFFLINE")
-  ){
+
+  if(msg.indexOf("HOTSPOT=OFFLINE") !== -1){
 
     setStatus(
       "hotspotStatus",
       "OFFLINE",
-      false
+      "offline"
     );
 
   }
 
 
-  if(
-    payload.includes("INTERNET=ONLINE")
-  ){
+  if(msg.indexOf("INTERNET=ONLINE") !== -1){
 
     setStatus(
       "internetStatus",
       "ONLINE",
-      true
+      "online"
     );
 
   }
 
-  else if(
-    payload.includes("INTERNET=OFFLINE")
-  ){
+
+  if(msg.indexOf("INTERNET=OFFLINE") !== -1){
 
     setStatus(
       "internetStatus",
       "OFFLINE",
-      false
+      "offline"
     );
 
   }
 
 
-  /* USERS */
+  const userMatch =
+    msg.match(/USERS=(\d+)/);
 
-  const match =
-    payload.match(/USERS=(\d+)/);
-
-  if(match){
+  if(userMatch){
 
     document.getElementById(
       "usersStatus"
-    ).innerText = match[1];
-
-  }
-
-
-  /* MQTT */
-
-  if(
-    payload.includes("MQTT=ONLINE")
-  ){
-
-    setStatus(
-      "mqttStatus",
-      "ONLINE",
-      true
-    );
-
-  }
-
-
-  /* START */
-
-  if(
-    payload === "START_PRESSED"
-  ){
+    ).textContent = userMatch[1];
 
     document.getElementById(
-      "lastAction"
-    ).innerText =
-      "START PRESSED";
-
-  }
-
-
-  /* STOP */
-
-  if(
-    payload === "STOP_PRESSED"
-  ){
-
-    document.getElementById(
-      "lastAction"
-    ).innerText =
-      "STOP PRESSED";
+      "usersStatus"
+    ).className = "status online";
 
   }
 
 }
 
 
-/* =========================
-   SEND COMMAND
-========================= */
+/* ==============================
+   SEND START / STOP
+   ============================== */
 
 function sendCommand(command){
 
-  if(
-    !client ||
-    !client.connected
-  ){
+  if(!client){
 
-    alert(
-      "MQTT is not connected!"
-    );
+    alert("MQTT connected nahi hai.");
 
     return;
+
+  }
+
+
+  if(!client.connected){
+
+    alert("MQTT offline hai.");
+
+    return;
+
   }
 
 
@@ -708,21 +633,45 @@ function sendCommand(command){
     {
       qos:0,
       retain:false
+    },
+    function(err){
+
+      if(err){
+
+        console.error(
+          "Publish error:",
+          err
+        );
+
+        setError(
+          "Command Error: " +
+          err.message
+        );
+
+        return;
+
+      }
+
+
+      console.log(
+        "Command sent:",
+        command
+      );
+
+      document.getElementById(
+        "lastAction"
+      ).textContent =
+        command + " SENT";
+
     }
   );
-
-
-  document.getElementById(
-    "lastAction"
-  ).innerText =
-    command + " SENT";
 
 }
 
 
-/* =========================
-   START
-========================= */
+/* ==============================
+   START PAGE
+   ============================== */
 
 window.addEventListener(
   "load",
@@ -737,337 +686,3 @@ window.addEventListener(
 
 </body>
 </html>
-.yellow {
-    background: #f59e0b;
-}
-
-.buttons {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-}
-
-button {
-    border: none;
-    color: white;
-    border-radius: 16px;
-    padding: 25px 10px;
-    font-size: 22px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.15s;
-}
-
-button:active {
-    transform: scale(0.95);
-}
-
-.start-button {
-    background: #16a34a;
-}
-
-.stop-button {
-    background: #dc2626;
-}
-
-button:disabled {
-    background: #475569;
-    cursor: not-allowed;
-}
-
-.connection-box {
-    text-align: center;
-    padding: 12px;
-    background: #0f172a;
-    border-radius: 12px;
-    margin-bottom: 15px;
-    font-size: 18px;
-    font-weight: bold;
-}
-
-.last-action {
-    text-align: center;
-    font-size: 18px;
-}
-
-.last-action-value {
-    margin-top: 10px;
-    font-size: 22px;
-    font-weight: bold;
-}
-
-.users-number {
-    font-size: 22px;
-    font-weight: bold;
-}
-
-.footer {
-    text-align: center;
-    color: #64748b;
-    font-size: 13px;
-    margin-top: 20px;
-}
-
-</style>
-
-</head>
-
-
-<body>
-
-<div class="container">
-
-
-<!-- ========================================= -->
-<!-- HEADER -->
-<!-- ========================================= -->
-
-<div class="header">
-
-<h1>⚡ UTTAM STARTER</h1>
-
-<p>Remote Control Panel</p>
-
-</div>
-
-
-<!-- ========================================= -->
-<!-- SYSTEM STATUS -->
-<!-- ========================================= -->
-
-<div class="card">
-
-<div class="card-title">
-System Status
-</div>
-
-
-<!-- MQTT -->
-
-<div class="connection-box">
-
-MQTT :
-
-<span id="mqttStatus"
-      class="status-offline">
-
-<span class="dot red"></span>
-OFFLINE
-
-</span>
-
-</div>
-
-
-<!-- ESP32 -->
-
-<div class="status-row">
-
-<span>
-ESP32
-</span>
-
-<span id="espStatus"
-      class="status-offline">
-
-<span class="dot red"></span>
-OFFLINE
-
-</span>
-
-</div>
-
-
-<!-- HOTSPOT -->
-
-<div class="status-row">
-
-<span>
-HOTSPOT
-</span>
-
-<span id="hotspotStatus"
-      class="status-offline">
-
-<span class="dot red"></span>
-OFFLINE
-
-</span>
-
-</div>
-
-
-<!-- INTERNET -->
-
-<div class="status-row">
-
-<span>
-INTERNET
-</span>
-
-<span id="internetStatus"
-      class="status-offline">
-
-<span class="dot red"></span>
-OFFLINE
-
-</span>
-
-</div>
-
-
-<!-- WIFI USERS -->
-
-<div class="status-row">
-
-<span>
-Wi-Fi Users
-</span>
-
-<span id="wifiUsers"
-      class="users-number">
-
-0
-
-</span>
-
-</div>
-
-
-</div>
-
-
-<!-- ========================================= -->
-<!-- START STOP -->
-<!-- ========================================= -->
-
-<div class="card">
-
-<div class="card-title">
-Starter Control
-</div>
-
-
-<div class="buttons">
-
-
-<button
-id="startButton"
-class="start-button"
-onclick="sendCommand('START')">
-
-▶ START
-
-</button>
-
-
-<button
-id="stopButton"
-class="stop-button"
-onclick="sendCommand('STOP')">
-
-■ STOP
-
-</button>
-
-
-</div>
-
-</div>
-
-
-<!-- ========================================= -->
-<!-- LAST ACTION -->
-<!-- ========================================= -->
-
-<div class="card">
-
-<div class="last-action">
-
-Last Action
-
-<div id="lastAction"
-     class="last-action-value">
-
-WAITING
-
-</div>
-
-</div>
-
-</div>
-
-
-<div class="footer">
-
-ESP32 + W5500 + HiveMQ
-
-</div>
-
-
-</div>
-
-
-<script>
-
-
-// =====================================================
-// HIVE MQ SETTINGS
-// =====================================================
-
-const MQTT_HOST =
-"wss://3eb57fe59a7e4f279b1dfa7c29dc413b.s1.eu.hivemq.cloud:8884/mqtt";
-
-
-const MQTT_USER =
-"esp32";
-
-
-// =====================================================
-// अपना HiveMQ PASSWORD यहाँ डालें
-// =====================================================
-
-const MQTT_PASS =
-"Uttam@861.";
-
-
-// =====================================================
-// MQTT TOPICS
-// =====================================================
-
-const COMMAND_TOPIC =
-"uttam/starter/command";
-
-
-const STATUS_TOPIC =
-"uttam/starter/status";
-
-
-// =====================================================
-// MQTT CLIENT
-// =====================================================
-
-let client = null;
-
-
-// =====================================================
-// UPDATE STATUS FUNCTION
-// =====================================================
-
-function setStatus(
-    elementId,
-    text,
-    online
-) {
-
-    const element =
-        document.getElementById(elementId);
-
-
-    if (online) {
-
-        element.className =
-            "status-online";
-
-        element.innerHTML =
-            '<span class="
