@@ -10,7 +10,6 @@
 
 <title>Uttam Starter Control</title>
 
-<!-- MQTT.js -->
 <script src="https://cdn.jsdelivr.net/npm/mqtt/dist/mqtt.min.js"></script>
 
 <style>
@@ -24,7 +23,7 @@ body{
   padding:0;
   font-family:Arial,Helvetica,sans-serif;
   background:#0f1117;
-  color:#ffffff;
+  color:#fff;
 }
 
 .container{
@@ -85,7 +84,7 @@ button{
   margin-top:12px;
   font-size:22px;
   font-weight:bold;
-  color:white;
+  color:#fff;
   cursor:pointer;
 }
 
@@ -123,6 +122,13 @@ button:disabled{
   margin-top:15px;
 }
 
+.info{
+  text-align:center;
+  color:#8e96a8;
+  font-size:12px;
+  margin-top:8px;
+}
+
 </style>
 
 </head>
@@ -132,77 +138,66 @@ button:disabled{
 
 <div class="container">
 
-
 <h1>⚡ Uttam Starter Control</h1>
 
 
-<!-- STATUS CARD -->
+<!-- ================= STATUS ================= -->
 
 <div class="card">
 
   <div class="status-row">
-
     <span>MQTT</span>
 
     <span id="mqttStatus"
           class="status offline">
       OFFLINE
     </span>
-
   </div>
 
 
   <div class="status-row">
-
     <span>ESP32</span>
 
     <span id="espStatus"
           class="status offline">
       OFFLINE
     </span>
-
   </div>
 
 
   <div class="status-row">
-
     <span>HOTSPOT</span>
 
     <span id="hotspotStatus"
           class="status unknown">
       UNKNOWN
     </span>
-
   </div>
 
 
   <div class="status-row">
-
     <span>INTERNET</span>
 
     <span id="internetStatus"
           class="status unknown">
       UNKNOWN
     </span>
-
   </div>
 
 
   <div class="status-row">
-
     <span>Wi-Fi Users</span>
 
     <span id="usersStatus"
           class="status unknown">
       --
     </span>
-
   </div>
 
 </div>
 
 
-<!-- CONTROL BUTTONS -->
+<!-- ================= CONTROL ================= -->
 
 <div class="card">
 
@@ -230,7 +225,7 @@ button:disabled{
 </div>
 
 
-<!-- LAST ACTION -->
+<!-- ================= LAST ACTION ================= -->
 
 <div class="card">
 
@@ -258,6 +253,12 @@ button:disabled{
 </div>
 
 
+<div class="info">
+
+  EMQX Cloud • Secure WebSocket
+
+</div>
+
 </div>
 
 
@@ -265,38 +266,42 @@ button:disabled{
 
 
 /* =====================================================
-   HIVEMQ CLOUD
+   EMQX CLOUD
    ===================================================== */
 
 
 /*
-   HiveMQ Cloud WebSocket address
+   EMQX Serverless WebSocket TLS
 */
 
 const MQTT_HOST =
-"wss://3eb57fe59a7e4f279b1dfa7c29dc413b.s1.eu.hivemq.cloud:8884/mqtt";
+"wss://e21427ed.ala.eu-central-1.emqxsl.com:8084/mqtt";
 
 
 /*
-   HiveMQ username
+   WEB CONTROL USER
+
+   EMQX Authentication me jo user banaya hai:
+   webcontrol
 */
 
 const MQTT_USER =
-"esp32";
+"webcontrol";
 
 
 /*
+   YAHAN webcontrol KA PASSWORD DALO
+
+   Example:
+
+   const MQTT_PASS = "YourWebPassword";
+
    IMPORTANT:
-   YAHAN APNA ACTUAL HIVEMQ PASSWORD DALO.
-
-   Example format:
-   const MQTT_PASS = "YOUR_PASSWORD";
-
-   Apna real password chat me mat bhejna.
+   ESP32 wala password yahan mat lagana.
 */
 
 const MQTT_PASS =
-"Uttam@861.";
+"YOUR_WEBCONTROL_PASSWORD";
 
 
 /* =====================================================
@@ -311,10 +316,12 @@ const STATUS_TOPIC =
 
 
 /* =====================================================
-   VARIABLE
+   VARIABLES
    ===================================================== */
 
 let client = null;
+
+let lastStatusTime = 0;
 
 
 /* =====================================================
@@ -339,7 +346,7 @@ function setStatus(id,text,type){
 
 
 /* =====================================================
-   ERROR FUNCTION
+   ERROR
    ===================================================== */
 
 function setError(text){
@@ -376,9 +383,11 @@ function clearError(){
 
 function enableButtons(){
 
-  document.getElementById("startBtn").disabled = false;
+  document.getElementById("startBtn").disabled =
+    false;
 
-  document.getElementById("stopBtn").disabled = false;
+  document.getElementById("stopBtn").disabled =
+    false;
 
 }
 
@@ -389,9 +398,11 @@ function enableButtons(){
 
 function disableButtons(){
 
-  document.getElementById("startBtn").disabled = true;
+  document.getElementById("startBtn").disabled =
+    true;
 
-  document.getElementById("stopBtn").disabled = true;
+  document.getElementById("stopBtn").disabled =
+    true;
 
 }
 
@@ -402,7 +413,7 @@ function disableButtons(){
 
 function connectMQTT(){
 
-  console.log("Starting MQTT connection...");
+  console.log("Connecting to EMQX...");
 
   clearError();
 
@@ -413,7 +424,7 @@ function connectMQTT(){
   );
 
 
-  /* Check MQTT.js */
+  /* MQTT.js check */
 
   if(typeof mqtt === "undefined"){
 
@@ -424,14 +435,14 @@ function connectMQTT(){
     );
 
     setError(
-      "MQTT.js library load nahi hui."
+      "MQTT.js load nahi hui."
     );
 
     return;
   }
 
 
-  /* Generate unique browser client ID */
+  /* Unique browser client ID */
 
   const clientId =
     "uttam_web_" +
@@ -447,39 +458,49 @@ function connectMQTT(){
 
 
   console.log(
-    "MQTT Host:",
+    "Connecting:",
     MQTT_HOST
   );
 
 
-  /* MQTT connection */
+  /* =================================================
+     MQTT CONNECT
+     ================================================= */
 
   client = mqtt.connect(
     MQTT_HOST,
     {
 
-      username: MQTT_USER,
+      username:
+        MQTT_USER,
 
-      password: MQTT_PASS,
+      password:
+        MQTT_PASS,
 
-      clientId: clientId,
+      clientId:
+        clientId,
 
-      clean: true,
+      clean:
+        true,
 
-      reconnectPeriod: 5000,
+      reconnectPeriod:
+        5000,
 
-      connectTimeout: 15000,
+      connectTimeout:
+        15000,
 
-      protocolVersion: 4,
+      keepalive:
+        60,
 
-      keepalive: 60
+      protocolVersion:
+        4
 
     }
   );
 
 
   /* =================================================
-     MQTT CONNECTED
+     CONNECTED
      ================================================= */
 
   client.on(
@@ -487,7 +508,7 @@ function connectMQTT(){
     function(){
 
       console.log(
-        "MQTT CONNECTED"
+        "EMQX CONNECTED"
       );
 
 
@@ -504,7 +525,7 @@ function connectMQTT(){
       enableButtons();
 
 
-      /* Subscribe status topic */
+      /* Subscribe ESP32 status */
 
       client.subscribe(
         STATUS_TOPIC,
@@ -525,15 +546,14 @@ function connectMQTT(){
               error.message
             );
 
+            return;
           }
-          else{
 
-            console.log(
-              "Subscribed:",
-              STATUS_TOPIC
-            );
 
-          }
+          console.log(
+            "Subscribed:",
+            STATUS_TOPIC
+          );
 
         }
       );
@@ -566,26 +586,20 @@ function connectMQTT(){
       }
 
 
-      /* ---------------------------------------------
-         ESP32 ONLINE
-         --------------------------------------------- */
+      /* Status received */
 
-      if(msg === "ONLINE"){
-
-        setStatus(
-          "espStatus",
-          "ONLINE",
-          "online"
-        );
-
-      }
+      lastStatusTime =
+        Date.now();
 
 
-      /* ---------------------------------------------
-         START PRESSED
-         --------------------------------------------- */
+      /* Parse complete ESP32 status */
 
-      else if(
+      parseSystemStatus(msg);
+
+
+      /* START */
+
+      if(
         msg === "START_PRESSED"
       ){
 
@@ -595,7 +609,6 @@ function connectMQTT(){
           "online"
         );
 
-
         document.getElementById(
           "lastAction"
         ).textContent =
@@ -604,11 +617,9 @@ function connectMQTT(){
       }
 
 
-      /* ---------------------------------------------
-         STOP PRESSED
-         --------------------------------------------- */
+      /* STOP */
 
-      else if(
+      if(
         msg === "STOP_PRESSED"
       ){
 
@@ -618,7 +629,6 @@ function connectMQTT(){
           "online"
         );
 
-
         document.getElementById(
           "lastAction"
         ).textContent =
@@ -627,18 +637,39 @@ function connectMQTT(){
       }
 
 
-      /* ---------------------------------------------
-         STRUCTURED STATUS
-         --------------------------------------------- */
+      /* START RELEASED */
 
-      parseSystemStatus(msg);
+      if(
+        msg === "START_RELEASED"
+      ){
+
+        document.getElementById(
+          "lastAction"
+        ).textContent =
+          "START RELEASED";
+
+      }
+
+
+      /* STOP RELEASED */
+
+      if(
+        msg === "STOP_RELEASED"
+      ){
+
+        document.getElementById(
+          "lastAction"
+        ).textContent =
+          "STOP RELEASED";
+
+      }
 
     }
   );
 
 
   /* =================================================
-     MQTT ERROR
+     ERROR
      ================================================= */
 
   client.on(
@@ -674,7 +705,7 @@ function connectMQTT(){
 
 
   /* =================================================
-     MQTT CLOSE
+     CLOSE
      ================================================= */
 
   client.on(
@@ -700,7 +731,7 @@ function connectMQTT(){
 
 
   /* =================================================
-     MQTT RECONNECT
+     RECONNECT
      ================================================= */
 
   client.on(
@@ -708,7 +739,7 @@ function connectMQTT(){
     function(){
 
       console.log(
-        "MQTT reconnecting..."
+        "Reconnecting..."
       );
 
 
@@ -723,7 +754,7 @@ function connectMQTT(){
 
 
   /* =================================================
-     MQTT OFFLINE
+     OFFLINE
      ================================================= */
 
   client.on(
@@ -756,19 +787,29 @@ function connectMQTT(){
 
 function parseSystemStatus(msg){
 
+  console.log(
+    "Parsing status:",
+    msg
+  );
+
 
   /*
-     Expected future ESP32 message:
+     ESP32 firmware message example:
 
+     FIRMWARE=V4.1-EMQX-OTA,
      ESP32=ONLINE,
      HOTSPOT=ONLINE,
      USERS=1,
      INTERNET=ONLINE,
-     MQTT=ONLINE
+     IP=192.168.x.x,
+     NAT=ONLINE,
+     DNS=ONLINE
   */
 
 
-  /* ESP32 */
+  /* =================================================
+     ESP32
+     ================================================= */
 
   if(
     msg.includes("ESP32=ONLINE")
@@ -796,7 +837,9 @@ function parseSystemStatus(msg){
   }
 
 
-  /* HOTSPOT */
+  /* =================================================
+     HOTSPOT
+     ================================================= */
 
   if(
     msg.includes("HOTSPOT=ONLINE")
@@ -824,7 +867,9 @@ function parseSystemStatus(msg){
   }
 
 
-  /* INTERNET */
+  /* =================================================
+     INTERNET
+     ================================================= */
 
   if(
     msg.includes("INTERNET=ONLINE")
@@ -852,7 +897,9 @@ function parseSystemStatus(msg){
   }
 
 
-  /* USERS */
+  /* =================================================
+     USERS
+     ================================================= */
 
   const userMatch =
     msg.match(/USERS=(\d+)/);
@@ -860,15 +907,15 @@ function parseSystemStatus(msg){
 
   if(userMatch){
 
-    document.getElementById(
-      "usersStatus"
-    ).textContent =
+    const users =
+      document.getElementById(
+        "usersStatus"
+      );
+
+    users.textContent =
       userMatch[1];
 
-
-    document.getElementById(
-      "usersStatus"
-    ).className =
+    users.className =
       "status online";
 
   }
@@ -877,13 +924,15 @@ function parseSystemStatus(msg){
 
 
 /* =====================================================
-   SEND START / STOP
+   SEND COMMAND
    ===================================================== */
 
 function sendCommand(command){
 
+  clearError();
 
-  /* Check client */
+
+  /* Client check */
 
   if(!client){
 
@@ -896,7 +945,7 @@ function sendCommand(command){
   }
 
 
-  /* Check connection */
+  /* Connection check */
 
   if(!client.connected){
 
@@ -910,12 +959,12 @@ function sendCommand(command){
 
 
   console.log(
-    "Sending command:",
+    "Sending:",
     command
   );
 
 
-  /* Publish */
+  /* Publish command */
 
   client.publish(
     COMMAND_TOPIC,
@@ -963,6 +1012,73 @@ function sendCommand(command){
 
 
 /* =====================================================
+   STATUS WATCHDOG
+   ===================================================== */
+
+/*
+   Agar ESP32 se 90 second tak status nahi aaya,
+   to website ESP32 ko OFFLINE dikhayegi.
+*/
+
+setInterval(
+  function(){
+
+    if(
+      lastStatusTime === 0
+    ){
+      return;
+    }
+
+
+    const elapsed =
+      Date.now() -
+      lastStatusTime;
+
+
+    if(
+      elapsed > 90000
+    ){
+
+      setStatus(
+        "espStatus",
+        "OFFLINE",
+        "offline"
+      );
+
+
+      setStatus(
+        "hotspotStatus",
+        "UNKNOWN",
+        "unknown"
+      );
+
+
+      setStatus(
+        "internetStatus",
+        "UNKNOWN",
+        "unknown"
+      );
+
+
+      document.getElementById(
+        "usersStatus"
+      ).textContent =
+        "--";
+
+
+      document.getElementById(
+        "usersStatus"
+      ).className =
+        "status unknown";
+
+    }
+
+  },
+  10000
+);
+
+
+/* =====================================================
    PAGE LOAD
    ===================================================== */
 
@@ -983,4 +1099,4 @@ window.addEventListener(
 </script>
 
 </body>
-</html>
+      </html>
