@@ -77,10 +77,6 @@ body{
   padding:15px;
 }
 
-.status-box span{
-  display:block;
-}
-
 .status-label{
   color:#8e96a8;
   font-size:13px;
@@ -94,10 +90,6 @@ body{
 
 .online{
   color:#20e070;
-}
-
-.offline{
-  color:#ff4d4d;
 }
 
 /* ================= DEVICES ================= */
@@ -189,6 +181,14 @@ input:checked + .slider:before{
 
 /* ================= QUICK CONTROL ================= */
 
+.quick-card{
+  background:#191d27;
+  border-radius:18px;
+  padding:18px;
+  margin-top:18px;
+  margin-bottom:18px;
+}
+
 .quick{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -198,7 +198,7 @@ input:checked + .slider:before{
 .quick button{
   border:none;
   border-radius:14px;
-  padding:17px;
+  padding:17px 10px;
   font-size:16px;
   font-weight:bold;
   color:white;
@@ -213,30 +213,67 @@ input:checked + .slider:before{
   background:#c62828;
 }
 
-/* ================= ENERGY ================= */
+/* ================= REMOTE ================= */
 
-.energy{
+.remote-section{
+  margin-top:20px;
+}
+
+.remote-title{
+  font-size:21px;
+  font-weight:bold;
+  margin-bottom:14px;
+}
+
+.remote-grid{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:12px;
+  gap:14px;
 }
 
-.energy-box{
-  background:#222733;
+.remote-card{
+  background:#191d27;
+  border-radius:18px;
   padding:16px;
-  border-radius:14px;
   text-align:center;
+  box-shadow:0 5px 20px rgba(0,0,0,.30);
 }
 
-.energy-value{
-  font-size:24px;
+.remote-icon{
+  font-size:38px;
+  margin-bottom:7px;
+}
+
+.remote-name{
+  font-size:17px;
   font-weight:bold;
-  margin-top:5px;
+  margin-bottom:14px;
 }
 
-.energy-label{
-  color:#8e96a8;
-  font-size:13px;
+.remote-button{
+  width:100%;
+  border:none;
+  border-radius:12px;
+  padding:13px 5px;
+  margin-top:7px;
+  background:#282e3b;
+  color:#fff;
+  font-size:15px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.remote-button:active{
+  transform:scale(.97);
+  background:#3b4353;
+}
+
+.power{
+  background:#c62828;
+}
+
+.ok{
+  background:#168a43;
 }
 
 /* ================= FOOTER ================= */
@@ -281,52 +318,52 @@ input:checked + .slider:before{
 
     <div class="status-box">
 
-      <span class="status-label">
+      <div class="status-label">
         ESP32
-      </span>
+      </div>
 
-      <span class="status-value online">
+      <div class="status-value online">
         ● ONLINE
-      </span>
+      </div>
 
     </div>
 
 
     <div class="status-box">
 
-      <span class="status-label">
+      <div class="status-label">
         Wi-Fi
-      </span>
+      </div>
 
-      <span class="status-value online">
+      <div class="status-value online">
         ● CONNECTED
-      </span>
+      </div>
 
     </div>
 
 
     <div class="status-box">
 
-      <span class="status-label">
+      <div class="status-label">
         MQTT
-      </span>
+      </div>
 
-      <span class="status-value online">
+      <div class="status-value online">
         ● ONLINE
-      </span>
+      </div>
 
     </div>
 
 
     <div class="status-box">
 
-      <span class="status-label">
+      <div class="status-label">
         Internet
-      </span>
+      </div>
 
-      <span class="status-value online">
+      <div class="status-value online">
         ● ONLINE
-      </span>
+      </div>
 
     </div>
 
@@ -345,7 +382,7 @@ input:checked + .slider:before{
 <div class="device-grid">
 
 
-<!-- LIGHT 1 -->
+<!-- LIVING LIGHT -->
 
 <div class="device">
 
@@ -379,7 +416,7 @@ input:checked + .slider:before{
 </div>
 
 
-<!-- LIGHT 2 -->
+<!-- BEDROOM LIGHT -->
 
 <div class="device">
 
@@ -481,20 +518,20 @@ input:checked + .slider:before{
 </div>
 
 
-<!-- WATER PUMP -->
+<!-- TV -->
 
 <div class="device">
 
   <div class="device-icon">
-    💧
+    📺
   </div>
 
   <div class="device-name">
-    Water Pump
+    TV
   </div>
 
   <div class="device-status">
-    Pump 1
+    Onida TV
   </div>
 
   <div class="switch-row">
@@ -554,7 +591,7 @@ input:checked + .slider:before{
 
 <!-- ================= QUICK CONTROL ================= -->
 
-<div class="card">
+<div class="quick-card">
 
   <div class="section-title">
     Quick Control
@@ -577,66 +614,95 @@ input:checked + .slider:before{
 </div>
 
 
-<!-- ================= ENERGY ================= -->
+<!-- ================= REMOTES ================= -->
 
-<div class="card">
+<div class="remote-section">
 
-  <div class="status-title">
-    ⚡ Energy
+  <div class="remote-title">
+    🎛️ Remotes
   </div>
 
-  <div class="energy">
 
-    <div class="energy-box">
+  <div class="remote-grid">
 
-      <div class="energy-label">
-        Voltage
+
+    <!-- ONIDA TV REMOTE -->
+
+    <div class="remote-card">
+
+      <div class="remote-icon">
+        📺
       </div>
 
-      <div class="energy-value">
-        230 V
+      <div class="remote-name">
+        Onida TV
       </div>
+
+      <button class="remote-button power">
+        ⏻ POWER
+      </button>
+
+      <button class="remote-button">
+        🔊 VOL +
+      </button>
+
+      <button class="remote-button">
+        🔉 VOL -
+      </button>
+
+      <button class="remote-button">
+        ▲ CH +
+      </button>
+
+      <button class="remote-button">
+        ▼ CH -
+      </button>
+
+      <button class="remote-button ok">
+        OK
+      </button>
 
     </div>
 
 
-    <div class="energy-box">
+    <!-- DTH REMOTE -->
 
-      <div class="energy-label">
-        Current
+    <div class="remote-card">
+
+      <div class="remote-icon">
+        📡
       </div>
 
-      <div class="energy-value">
-        2.4 A
+      <div class="remote-name">
+        DTH Remote
       </div>
+
+      <button class="remote-button power">
+        ⏻ POWER
+      </button>
+
+      <button class="remote-button">
+        🔊 VOL +
+      </button>
+
+      <button class="remote-button">
+        🔉 VOL -
+      </button>
+
+      <button class="remote-button">
+        ▲ CH +
+      </button>
+
+      <button class="remote-button">
+        ▼ CH -
+      </button>
+
+      <button class="remote-button ok">
+        OK
+      </button>
 
     </div>
 
-
-    <div class="energy-box">
-
-      <div class="energy-label">
-        Power
-      </div>
-
-      <div class="energy-value">
-        552 W
-      </div>
-
-    </div>
-
-
-    <div class="energy-box">
-
-      <div class="energy-label">
-        Energy
-      </div>
-
-      <div class="energy-value">
-        4.8 kWh
-      </div>
-
-    </div>
 
   </div>
 
@@ -656,6 +722,9 @@ input:checked + .slider:before{
 
 
 <script>
+
+
+/* ================= DEVICE SWITCH ================= */
 
 function toggleDevice(element){
 
@@ -677,6 +746,8 @@ function toggleDevice(element){
 
 }
 
+
+/* ================= ALL ON ================= */
 
 function allOn(){
 
@@ -700,6 +771,8 @@ function allOn(){
 }
 
 
+/* ================= ALL OFF ================= */
+
 function allOff(){
 
   const switches =
@@ -721,8 +794,9 @@ function allOff(){
 
 }
 
+
 </script>
 
 </body>
 
-</html>
+      </html>
