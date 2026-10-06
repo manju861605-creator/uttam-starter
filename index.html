@@ -130,8 +130,6 @@ body{
   margin-bottom:14px;
 }
 
-/* ================= SWITCH ================= */
-
 .switch-row{
   display:flex;
   justify-content:space-between;
@@ -234,7 +232,7 @@ input:checked + .slider:before{
 .remote-card{
   background:#191d27;
   border-radius:18px;
-  padding:16px;
+  padding:14px;
   text-align:center;
   box-shadow:0 5px 20px rgba(0,0,0,.30);
 }
@@ -247,33 +245,173 @@ input:checked + .slider:before{
 .remote-name{
   font-size:17px;
   font-weight:bold;
-  margin-bottom:14px;
+  margin-bottom:9px;
 }
+
+/* ================= REMOTE BUTTON ================= */
 
 .remote-button{
   width:100%;
   border:none;
-  border-radius:12px;
-  padding:13px 5px;
+  border-radius:10px;
+  padding:11px 4px;
   margin-top:7px;
   background:#282e3b;
   color:#fff;
-  font-size:15px;
+  font-size:13px;
   font-weight:bold;
   cursor:pointer;
+  transition:.1s;
 }
 
 .remote-button:active{
-  transform:scale(.97);
+  transform:scale(.94);
   background:#3b4353;
+}
+
+/* ================= POWER / MUTE ================= */
+
+.remote-top{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:7px;
+}
+
+.remote-top .remote-button{
+  margin-top:0;
+  font-size:20px;
+  min-height:42px;
 }
 
 .power{
   background:#c62828;
 }
 
+.mute{
+  background:#343b4b;
+}
+
+.source{
+  background:#343b4b;
+}
+
+/* ================= NUMBER PAD ================= */
+
+.number-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:6px;
+  margin-top:7px;
+}
+
+.number-grid .remote-button{
+  margin-top:0;
+  min-height:40px;
+}
+
+/* ================= VOLUME / CHANNEL ================= */
+
+.control-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:7px;
+  margin-top:9px;
+}
+
+.control-column{
+  background:#222733;
+  border-radius:11px;
+  padding:7px;
+}
+
+.control-column small{
+  display:block;
+  color:#8e96a8;
+  font-size:9px;
+  margin-bottom:3px;
+}
+
+.control-column .remote-button{
+  margin-top:5px;
+}
+
+/* ================= NAVIGATION ================= */
+
+.navigation{
+  margin-top:9px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:5px;
+}
+
+.navigation > .remote-button{
+  width:50px;
+  margin-top:0;
+}
+
+.nav-middle{
+  display:grid;
+  grid-template-columns:50px 58px 50px;
+  gap:5px;
+}
+
+.nav-middle .remote-button{
+  margin-top:0;
+}
+
 .ok{
+  background:#168a43 !important;
+}
+
+/* ================= MENU ================= */
+
+.menu-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+  margin-top:9px;
+}
+
+.menu-grid .remote-button{
+  margin-top:0;
+  min-height:36px;
+  font-size:11px;
+}
+
+/* ================= COLOUR BUTTONS ================= */
+
+.colour-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:5px;
+  margin-top:9px;
+}
+
+.colour{
+  border:none;
+  border-radius:8px;
+  padding:9px 2px;
+  color:white;
+  font-size:8px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.red{
+  background:#c62828;
+}
+
+.green{
   background:#168a43;
+}
+
+.yellow{
+  background:#b59b00;
+}
+
+.blue{
+  background:#1565c0;
 }
 
 /* ================= FOOTER ================= */
@@ -283,6 +421,66 @@ input:checked + .slider:before{
   color:#707889;
   font-size:12px;
   margin:25px 0 8px;
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:480px){
+
+  .container{
+    padding:12px;
+  }
+
+  .header h1{
+    font-size:25px;
+  }
+
+  .device-grid{
+    gap:10px;
+  }
+
+  .device{
+    padding:14px;
+  }
+
+  .device-name{
+    font-size:16px;
+  }
+
+  .remote-grid{
+    gap:9px;
+  }
+
+  .remote-card{
+    padding:10px;
+  }
+
+  .remote-name{
+    font-size:15px;
+  }
+
+  .remote-button{
+    font-size:11px;
+    padding:10px 2px;
+  }
+
+  .nav-middle{
+    grid-template-columns:44px 52px 44px;
+  }
+
+  .navigation > .remote-button{
+    width:44px;
+  }
+
+}
+
+
+/* ================= TOUCH ================= */
+
+button,
+label{
+  -webkit-tap-highlight-color:transparent;
+  user-select:none;
 }
 
 </style>
@@ -295,7 +493,9 @@ input:checked + .slider:before{
 <div class="container">
 
 
-<!-- ================= HEADER ================= -->
+<!-- ================================================= -->
+<!-- HEADER -->
+<!-- ================================================= -->
 
 <div class="header">
 
@@ -306,7 +506,9 @@ input:checked + .slider:before{
 </div>
 
 
-<!-- ================= SYSTEM STATUS ================= -->
+<!-- ================================================= -->
+<!-- SYSTEM STATUS -->
+<!-- ================================================= -->
 
 <div class="card">
 
@@ -372,7 +574,9 @@ input:checked + .slider:before{
 </div>
 
 
-<!-- ================= DEVICES ================= -->
+<!-- ================================================= -->
+<!-- DEVICES -->
+<!-- ================================================= -->
 
 <div class="section-title">
   Devices
@@ -589,7 +793,9 @@ input:checked + .slider:before{
 </div>
 
 
-<!-- ================= QUICK CONTROL ================= -->
+<!-- ================================================= -->
+<!-- QUICK CONTROL -->
+<!-- ================================================= -->
 
 <div class="quick-card">
 
@@ -614,7 +820,9 @@ input:checked + .slider:before{
 </div>
 
 
-<!-- ================= REMOTES ================= -->
+<!-- ================================================= -->
+<!-- REMOTES -->
+<!-- ================================================= -->
 
 <div class="remote-section">
 
@@ -626,82 +834,517 @@ input:checked + .slider:before{
   <div class="remote-grid">
 
 
-    <!-- ONIDA TV REMOTE -->
+<!-- ================================================= -->
+<!-- ONIDA TV REMOTE -->
+<!-- ================================================= -->
 
-    <div class="remote-card">
+<div class="remote-card">
 
-      <div class="remote-icon">
-        📺
-      </div>
+  <div class="remote-icon">
+    📺
+  </div>
 
-      <div class="remote-name">
-        Onida TV
-      </div>
+  <div class="remote-name">
+    Onida TV
+  </div>
 
-      <button class="remote-button power">
-        ⏻ POWER
+
+  <!-- POWER / MUTE -->
+
+  <div class="remote-top">
+
+    <button class="remote-button power"
+            onclick="remoteCommand('ONIDA_POWER')">
+      ⏻
+    </button>
+
+    <button class="remote-button mute"
+            onclick="remoteCommand('ONIDA_MUTE')">
+      🔇
+    </button>
+
+  </div>
+
+
+  <!-- SOURCE -->
+
+  <button class="remote-button source"
+          onclick="remoteCommand('ONIDA_SOURCE')">
+    SOURCE
+  </button>
+
+
+  <!-- NUMBER PAD -->
+
+  <div class="number-grid">
+
+    <button class="remote-button"
+            onclick="remoteCommand('ONIDA_1')">
+      1
+    </button>
+
+    <button class="remote-button"
+            onclick="remoteCommand('ONIDA_2')">
+      2
+    </button>
+
+    <button class="remote-button"
+            onclick="remoteCommand('ONIDA_3')">
+      3
+    </button>
+
+
+    <button class="remote-button"
+            onclick="remoteCommand('ONIDA_4')">
+      4
+    </button>
+
+    <button class="remote-button"
+            onclick="remoteCommand('ONIDA_5')">
+      5
+    </button>
+
+    <button class="remote-button"
+            onclick="remoteCommand('ONIDA_6')">
+      6
+    </button>
+
+
+    <button class="remote-button"
+            onclick="remoteCommand('ONIDA_7')">
+      7
+    </button>
+
+    <button class="remote-button"
+            onclick="remoteCommand('ONIDA_8')">
+      8
+    </button>
+
+    <button class="remote-button"
+            onclick="remoteCommand('ONIDA_9')">
+      9
+    </button>
+
+
+    <button class="remote-button"
+            onclick="remoteCommand('ONIDA_PRE_CH')">
+      -/-
+    </button>
+
+    <button class="remote-button"
+            onclick="remoteCommand('ONIDA_0')">
+      0
+    </button>
+
+    <button class="remote-button"
+            onclick="remoteCommand('ONIDA_AV')">
+      AV
+    </button>
+
+  </div>
+
+
+  <!-- VOLUME / CHANNEL -->
+
+  <div class="control-row">
+
+    <div class="control-column">
+
+      <small>VOLUME</small>
+
+      <button class="remote-button"
+              onclick="remoteCommand('ONIDA_VOL_UP')">
+        🔊 +
       </button>
 
-      <button class="remote-button">
-        🔊 VOL +
-      </button>
-
-      <button class="remote-button">
-        🔉 VOL -
-      </button>
-
-      <button class="remote-button">
-        ▲ CH +
-      </button>
-
-      <button class="remote-button">
-        ▼ CH -
-      </button>
-
-      <button class="remote-button ok">
-        OK
+      <button class="remote-button"
+              onclick="remoteCommand('ONIDA_VOL_DOWN')">
+        🔉 −
       </button>
 
     </div>
 
 
-    <!-- DTH REMOTE -->
+    <div class="control-column">
 
-    <div class="remote-card">
+      <small>CHANNEL</small>
 
-      <div class="remote-icon">
-        📡
-      </div>
-
-      <div class="remote-name">
-        DTH Remote
-      </div>
-
-      <button class="remote-button power">
-        ⏻ POWER
+      <button class="remote-button"
+              onclick="remoteCommand('ONIDA_CH_UP')">
+        CH ▲
       </button>
 
-      <button class="remote-button">
-        🔊 VOL +
-      </button>
-
-      <button class="remote-button">
-        🔉 VOL -
-      </button>
-
-      <button class="remote-button">
-        ▲ CH +
-      </button>
-
-      <button class="remote-button">
-        ▼ CH -
-      </button>
-
-      <button class="remote-button ok">
-        OK
+      <button class="remote-button"
+              onclick="remoteCommand('ONIDA_CH_DOWN')">
+        CH ▼
       </button>
 
     </div>
+
+  </div>
+
+
+  <!-- NAVIGATION -->
+
+  <div class="navigation">
+
+    <button class="remote-button"
+            onclick="remoteCommand('ONIDA_UP')">
+      ▲
+    </button>
+
+
+    <div class="nav-middle">
+
+      <button class="remote-button"
+              onclick="remoteCommand('ONIDA_LEFT')">
+        ◀
+      </button>
+
+      <button class="remote-button ok"
+              onclick="remoteCommand('ONIDA_OK')">
+        OK
+      </button>
+
+      <button class="remote-button"
+              onclick="remoteCommand('ONIDA_RIGHT')">
+        ▶
+      </button>
+
+    </div>
+
+
+    <button class="remote-button"
+            onclick="remoteCommand('ONIDA_DOWN')">
+      ▼
+    </button>
+
+  </div>
+
+
+  <!-- MENU -->
+
+  <div class="menu-grid">
+
+    <button class="remote-button"
+            onclick="remoteCommand('ONIDA_MENU')">
+      MENU
+    </button>
+
+    <button class="remote-button"
+            onclick="remoteCommand('ONIDA_EXIT')">
+      EXIT
+    </button>
+
+    <button class="remote-button"
+            onclick="remoteCommand('ONIDA_INFO')">
+      INFO
+    </button>
+
+    <button class="remote-button"
+            onclick="remoteCommand('ONIDA_DISPLAY')">
+      DISPLAY
+    </button>
+
+  </div>
+
+
+  <!-- EXTRA -->
+
+  <div class="menu-grid">
+
+    <button class="remote-button"
+            onclick="remoteCommand('ONIDA_TV')">
+      TV
+    </button>
+
+    <button class="remote-button"
+            onclick="remoteCommand('ONIDA_AV')">
+      AV
+    </button>
+
+    <button class="remote-button"
+            onclick="remoteCommand('ONIDA_PICTURE')">
+      PICTURE
+    </button>
+
+    <button class="remote-button"
+            onclick="remoteCommand('ONIDA_SOUND')">
+      SOUND
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- ================================================= -->
+<!-- DTH REMOTE -->
+<!-- ================================================= -->
+
+<div class="remote-card">
+
+  <div class="remote-icon">
+    📡
+  </div>
+
+  <div class="remote-name">
+    DTH Remote
+  </div>
+
+
+  <!-- POWER / MUTE -->
+
+  <div class="remote-top">
+
+    <button class="remote-button power"
+            onclick="remoteCommand('DTH_POWER')">
+      ⏻
+    </button>
+
+    <button class="remote-button mute"
+            onclick="remoteCommand('DTH_MUTE')">
+      🔇
+    </button>
+
+  </div>
+
+
+  <button class="remote-button source"
+          onclick="remoteCommand('DTH_MENU')">
+    MENU
+  </button>
+
+
+  <!-- NUMBER PAD -->
+
+  <div class="number-grid">
+
+    <button class="remote-button"
+            onclick="remoteCommand('DTH_1')">
+      1
+    </button>
+
+    <button class="remote-button"
+            onclick="remoteCommand('DTH_2')">
+      2
+    </button>
+
+    <button class="remote-button"
+            onclick="remoteCommand('DTH_3')">
+      3
+    </button>
+
+
+    <button class="remote-button"
+            onclick="remoteCommand('DTH_4')">
+      4
+    </button>
+
+    <button class="remote-button"
+            onclick="remoteCommand('DTH_5')">
+      5
+    </button>
+
+    <button class="remote-button"
+            onclick="remoteCommand('DTH_6')">
+      6
+    </button>
+
+
+    <button class="remote-button"
+            onclick="remoteCommand('DTH_7')">
+      7
+    </button>
+
+    <button class="remote-button"
+            onclick="remoteCommand('DTH_8')">
+      8
+    </button>
+
+    <button class="remote-button"
+            onclick="remoteCommand('DTH_9')">
+      9
+    </button>
+
+
+    <button class="remote-button"
+            onclick="remoteCommand('DTH_GUIDE')">
+      GUIDE
+    </button>
+
+    <button class="remote-button"
+            onclick="remoteCommand('DTH_0')">
+      0
+    </button>
+
+    <button class="remote-button"
+            onclick="remoteCommand('DTH_LAST')">
+      LAST
+    </button>
+
+  </div>
+
+
+  <!-- VOLUME / CHANNEL -->
+
+  <div class="control-row">
+
+    <div class="control-column">
+
+      <small>VOLUME</small>
+
+      <button class="remote-button"
+              onclick="remoteCommand('DTH_VOL_UP')">
+        VOL +
+      </button>
+
+      <button class="remote-button"
+              onclick="remoteCommand('DTH_VOL_DOWN')">
+        VOL −
+      </button>
+
+    </div>
+
+
+    <div class="control-column">
+
+      <small>CHANNEL</small>
+
+      <button class="remote-button"
+              onclick="remoteCommand('DTH_CH_UP')">
+        CH +
+      </button>
+
+      <button class="remote-button"
+              onclick="remoteCommand('DTH_CH_DOWN')">
+        CH −
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- NAVIGATION -->
+
+  <div class="navigation">
+
+    <button class="remote-button"
+            onclick="remoteCommand('DTH_UP')">
+      ▲
+    </button>
+
+
+    <div class="nav-middle">
+
+      <button class="remote-button"
+              onclick="remoteCommand('DTH_LEFT')">
+        ◀
+      </button>
+
+      <button class="remote-button ok"
+              onclick="remoteCommand('DTH_OK')">
+        OK
+      </button>
+
+      <button class="remote-button"
+              onclick="remoteCommand('DTH_RIGHT')">
+        ▶
+      </button>
+
+    </div>
+
+
+    <button class="remote-button"
+            onclick="remoteCommand('DTH_DOWN')">
+      ▼
+    </button>
+
+  </div>
+
+
+  <!-- DTH MENU -->
+
+  <div class="menu-grid">
+
+    <button class="remote-button"
+            onclick="remoteCommand('DTH_GUIDE')">
+      GUIDE
+    </button>
+
+    <button class="remote-button"
+            onclick="remoteCommand('DTH_EXIT')">
+      EXIT
+    </button>
+
+    <button class="remote-button"
+            onclick="remoteCommand('DTH_INFO')">
+      INFO
+    </button>
+
+    <button class="remote-button"
+            onclick="remoteCommand('DTH_LIST')">
+      LIST
+    </button>
+
+  </div>
+
+
+  <!-- COLOUR BUTTONS -->
+
+  <div class="colour-grid">
+
+    <button class="colour red"
+            onclick="remoteCommand('DTH_RED')">
+      RED
+    </button>
+
+    <button class="colour green"
+            onclick="remoteCommand('DTH_GREEN')">
+      GREEN
+    </button>
+
+    <button class="colour yellow"
+            onclick="remoteCommand('DTH_YELLOW')">
+      YELLOW
+    </button>
+
+    <button class="colour blue"
+            onclick="remoteCommand('DTH_BLUE')">
+      BLUE
+    </button>
+
+  </div>
+
+
+  <!-- EXTRA -->
+
+  <div class="menu-grid">
+
+    <button class="remote-button"
+            onclick="remoteCommand('DTH_SUBTITLE')">
+      SUBTITLE
+    </button>
+
+    <button class="remote-button"
+            onclick="remoteCommand('DTH_AUDIO')">
+      AUDIO
+    </button>
+
+    <button class="remote-button"
+            onclick="remoteCommand('DTH_FAV')">
+      FAV
+    </button>
+
+    <button class="remote-button"
+            onclick="remoteCommand('DTH_TEXT')">
+      TEXT
+    </button>
+
+  </div>
+
+</div>
 
 
   </div>
@@ -709,7 +1352,9 @@ input:checked + .slider:before{
 </div>
 
 
-<!-- ================= FOOTER ================= -->
+<!-- ================================================= -->
+<!-- FOOTER -->
+<!-- ================================================= -->
 
 <div class="footer">
 
@@ -723,8 +1368,9 @@ input:checked + .slider:before{
 
 <script>
 
-
-/* ================= DEVICE SWITCH ================= */
+/* ================================================= */
+/* DEVICE SWITCH */
+/* ================================================= */
 
 function toggleDevice(element){
 
@@ -747,7 +1393,9 @@ function toggleDevice(element){
 }
 
 
-/* ================= ALL ON ================= */
+/* ================================================= */
+/* ALL ON */
+/* ================================================= */
 
 function allOn(){
 
@@ -771,7 +1419,9 @@ function allOn(){
 }
 
 
-/* ================= ALL OFF ================= */
+/* ================================================= */
+/* ALL OFF */
+/* ================================================= */
 
 function allOff(){
 
@@ -794,6 +1444,28 @@ function allOff(){
 
 }
 
+
+/* ================================================= */
+/* REMOTE COMMAND */
+/* ================================================= */
+
+function remoteCommand(command){
+
+  console.log("Remote Command:", command);
+
+  /*
+    Yahan baad me MQTT command add kar sakte hain.
+
+    Example:
+
+    mqttClient.publish(
+      "uttam/home/remote",
+      command
+    );
+
+  */
+
+}
 
 </script>
 
